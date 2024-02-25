@@ -211,27 +211,28 @@ def prepare_chunked_data(df_text, label):
     
 def load_and_prepare():
     loaded_dict = torch.load('data_tensors.pth', map_location=torch.device('cpu'))
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
     
     input_ids = loaded_dict['input_ids']
     attention_masks = loaded_dict['attention_masks']
     chunk_labels = loaded_dict['chunk_labels']
     document_ids = loaded_dict['document_ids']
+    document_ids = torch.tensor(document_ids)
     chunk_labels = torch.tensor(chunk_labels, dtype=torch.int64)
     chunk_labels = chunk_labels[:, [0,2]]
     
     
-    train_inputs, validation_inputs, train_labels, validation_labels = train_test_split(input_ids, chunk_labels, random_state=2018, test_size=0.1)
+    train_inputs, validation_inputs, train_labels, validation_labels, train_id, val_id = train_test_split(input_ids, chunk_labels, document_ids, random_state=2018, test_size=0.1)
     train_masks, validation_masks, _, _ = train_test_split(attention_masks, chunk_labels, random_state=2018, test_size=0.1)
     
-    batch_size = 32
+    batch_size = 16
     # Create the DataLoader for our training set
-    train_data = TensorDataset(train_inputs, train_masks, train_labels)
+    train_data = TensorDataset(train_inputs, train_masks, train_labels, train_id)
     train_sampler = RandomSampler(train_data)
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=batch_size)
     
     # Create the DataLoader for our validation set
-    validation_data = TensorDataset(validation_inputs, validation_masks, validation_labels)
+    validation_data = TensorDataset(validation_inputs, validation_masks, validation_labels, val_id)
     validation_sampler = SequentialSampler(validation_data)
     validation_dataloader = DataLoader(validation_data, sampler=validation_sampler, batch_size=batch_size)
     
@@ -328,7 +329,7 @@ def train_single_class(train_dataloader, validation_dataloader, epochs=2):
         # Progress bar (tqdm) can be wrapped around any iterable
         for step, batch in enumerate(tqdm(train_dataloader, desc=f"Epoch {epoch+1}")):
             batch = tuple(t.to(device) for t in batch)  # Move batch to device
-            b_input_ids, b_input_mask, b_labels = batch
+            b_input_ids, b_input_mask, b_labels,_ = batch
             #b_labels = b_labels.to(torch.int64)
             b_labels = b_labels.to(torch.float)
     
@@ -490,7 +491,8 @@ def train_multi_class(train_dataloader, validation_dataloader, num_class=3, epoc
         print('\t - Validation Recall: {:.4f}'.format(sum(val_recall)/len(val_recall)) if len(val_recall)>0 else '\t - Validation Recall: NaN')
         print('\t - Validation Specificity: {:.4f}\n'.format(sum(val_specificity)/len(val_specificity)) if len(val_specificity)>0 else '\t - Validation Specificity: NaN')
 
-prepare_chunked_data(df_text, label_matrix)
+#prepare_chunked_data(df_text, label_matrix)
+torch.cuda.empty_cache()
 train_dataloader, validation_dataloader = load_and_prepare()
 train_single_class(train_dataloader, validation_dataloader)
 
