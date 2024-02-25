@@ -215,7 +215,8 @@ def prepare_chunked_data(df_text, label):
     torch.save(save_dict, 'data_tensors.pth')
     
 def load_and_prepare():
-    loaded_dict = torch.load('data_tensors.pth', map_location=torch.device('cpu'))
+    save_path = f"data_tensors_{OVERLAP}.pth"
+    loaded_dict = torch.load(save_path, map_location=torch.device('cpu'))
     device = torch.device("cpu")
     
     input_ids = loaded_dict['input_ids']
@@ -353,7 +354,7 @@ def train_single_class(train_dataloader, validation_dataloader, epochs=2):
         # Calculate the average loss over the training data
         avg_train_loss = total_loss / len(train_dataloader)
         print(f"Average training loss: {avg_train_loss:.2f}")
-        model.save_pretrained(f"bert_model_{epoch}")
+        model.save_pretrained(f"bert_model_{epoch}_{OVERLAP}")
         # ========== Validation ==========
     
         # Set model to evaluation mode
@@ -496,7 +497,7 @@ def train_multi_class(train_dataloader, validation_dataloader, num_class=3, epoc
         print('\t - Validation Recall: {:.4f}'.format(sum(val_recall)/len(val_recall)) if len(val_recall)>0 else '\t - Validation Recall: NaN')
         print('\t - Validation Specificity: {:.4f}\n'.format(sum(val_specificity)/len(val_specificity)) if len(val_specificity)>0 else '\t - Validation Specificity: NaN')
 
-#prepare_chunked_data(df_text, label_matrix)
+prepare_chunked_data(df_text, label_matrix)
 torch.cuda.empty_cache()
 train_dataloader, validation_dataloader = load_and_prepare()
 train_single_class(train_dataloader, validation_dataloader)
