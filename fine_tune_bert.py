@@ -212,7 +212,7 @@ def prepare_chunked_data(df_text, label):
     }
 
     # Saving to disk
-    torch.save(save_dict, 'data_tensors.pth')
+    torch.save(save_dict, f'data_tensors_{OVERLAP}.pth')
     
 def load_and_prepare():
     save_path = f"data_tensors_{OVERLAP}.pth"
