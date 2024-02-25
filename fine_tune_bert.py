@@ -31,6 +31,7 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 
 MAX_LEN = 510 #token size
+OVERLAP = 0.1
 
 # Prepare for training
 #train_index = pd.read_csv("training_example_indices.txt",header=None)
@@ -67,17 +68,21 @@ def divide_doc(input_text, tokenizer):
     tokenized_sentences = [tokenizer.tokenize(sentence) for sentence in sentences]
     chunks = []
     current_chunk = []
-    current_length = 0
-    for sentence in tokenized_sentences:
-        if current_length + len(sentence) > MAX_LEN:
-            chunks.append(current_chunk)
-            current_chunk = []
-            current_length = 0
-        current_chunk.extend(sentence)
-        current_length += len(sentence)
-    # Add the last chunk if not empty
-    if current_chunk:
+    overlap_length = int(MAX_LEN * OVERLAP)
+    start_index = 0
+    
+    while start_index < len(tokenized_sentences):
+        current_chunk = []
+        current_length = 0
+        for sentence in tokenized_sentences[start_index:]:
+            if current_length + len(sentence) > MAX_LEN and current_chunk:
+                break
+            current_chunk.extend(sentence)
+            current_length += len(sentence)
+        
         chunks.append(current_chunk)
+        # Calculate the start index for the next chunk based on overlap
+        start_index += max(1, len(current_chunk) - overlap_length)
         
     return chunks
 
