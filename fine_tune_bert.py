@@ -66,8 +66,8 @@ def sentence_tokenizer(input_text):
 def divide_doc(input_text, tokenizer):
     sentences = sentence_tokenizer(input_text)
     tokenized_sentences = [tokenizer.tokenize(sentence) for sentence in sentences]
+    
     chunks = []
-    current_chunk = []
     overlap_length = int(MAX_LEN * OVERLAP)
     start_index = 0
     
@@ -82,7 +82,7 @@ def divide_doc(input_text, tokenizer):
         
         chunks.append(current_chunk)
         # Calculate the start index for the next chunk based on overlap
-        start_index += max(1, len(current_chunk) - overlap_length)
+        start_index += len(current_chunk) - overlap_length
         
     return chunks
 
