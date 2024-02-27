@@ -82,7 +82,7 @@ def divide_doc(input_text, tokenizer):
         
         chunks.append(current_chunk)
         # Calculate the start index for the next chunk based on overlap
-        start_index += len(current_chunk) - overlap_length
+        start_index += max(1, len(current_chunk) - overlap_length)
         
     return chunks
 
