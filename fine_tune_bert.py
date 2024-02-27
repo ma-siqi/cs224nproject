@@ -31,7 +31,7 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 
 MAX_LEN = 510 #token size
-OVERLAP = 0.1
+OVERLAP = 0.3
 
 # Prepare for training
 #train_index = pd.read_csv("training_example_indices.txt",header=None)
