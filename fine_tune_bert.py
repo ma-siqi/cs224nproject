@@ -170,8 +170,8 @@ def prepare_data(df_text, label):
     attention_masks = torch.cat(attention_masks, dim = 0)
     df_label = torch.tensor(label_array, dtype=torch.float)
     
-    train_inputs, validation_inputs, train_labels, validation_labels = train_test_split(input_ids, df_label, random_state=2018, test_size=0.1)
-    train_masks, validation_masks, _, _ = train_test_split(attention_masks, df_label, random_state=2018, test_size=0.1)
+    train_inputs, validation_inputs, train_labels, validation_labels = train_test_split(input_ids, df_label, random_state=2018, test_size=0.2)
+    train_masks, validation_masks, _, _ = train_test_split(attention_masks, df_label, random_state=2018, test_size=0.2)
     
     batch_size = 32
     # Create the DataLoader for our training set
@@ -241,8 +241,8 @@ def load_and_prepare():
     chunk_labels = chunk_labels[:, [0,2]]
     
     
-    train_inputs, validation_inputs, train_labels, validation_labels, train_id, val_id = train_test_split(input_ids, chunk_labels, document_ids, random_state=2018, test_size=0.1)
-    train_masks, validation_masks, _, _ = train_test_split(attention_masks, chunk_labels, random_state=2018, test_size=0.1)
+    train_inputs, validation_inputs, train_labels, validation_labels, train_id, val_id = train_test_split(input_ids, chunk_labels, document_ids, random_state=2018, test_size=0.2)
+    train_masks, validation_masks, _, _ = train_test_split(attention_masks, chunk_labels, random_state=2018, test_size=0.2)
     
     batch_size = 16
     # Create the DataLoader for our training set
