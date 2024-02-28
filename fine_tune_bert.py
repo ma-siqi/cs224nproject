@@ -225,10 +225,10 @@ def prepare_chunked_data(df_text, label):
     }
 
     # Saving to disk
-    torch.save(save_dict, f'data_tensors_{OVERLAP}.pth')
+    torch.save(save_dict, f'data_tensors_{OVERLAP}_new.pth')
     
 def load_and_prepare():
-    save_path = f"data_tensors_{OVERLAP}.pth"
+    save_path = f"data_tensors_{OVERLAP}_new.pth"
     loaded_dict = torch.load(save_path, map_location=torch.device('cpu'))
     device = torch.device("cpu")
     
@@ -367,7 +367,7 @@ def train_single_class(train_dataloader, validation_dataloader, epochs=2):
         # Calculate the average loss over the training data
         avg_train_loss = total_loss / len(train_dataloader)
         print(f"Average training loss: {avg_train_loss:.2f}")
-        model.save_pretrained(f"bert_model_{epoch}_{OVERLAP}")
+        model.save_pretrained(f"bert_model_{epoch}_{OVERLAP}_new")
         # ========== Validation ==========
     
         # Set model to evaluation mode
