@@ -69,21 +69,34 @@ def divide_doc(input_text, tokenizer):
     
     chunks = []
     overlap_length = int(MAX_LEN * OVERLAP)
-    start_index = 0
     
-    while start_index < len(tokenized_sentences):
-        current_chunk = []
-        current_length = 0
-        for sentence in tokenized_sentences[start_index:]:
-            if current_length + len(sentence) > MAX_LEN and current_chunk:
-                break
-            current_chunk.extend(sentence)
-            current_length += len(sentence)
-        
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    overlap_tokens = []
+
+    for sentence in tokenized_sentences:
+        # Start new chunk with overlap tokens if available
+        if current_length == 0 and overlap_tokens:
+            current_chunk.extend(overlap_tokens)
+            current_length += len(overlap_tokens)
+            overlap_tokens = []
+
+        if current_length + len(sentence) > MAX_LEN:
+            chunks.append(current_chunk)
+            # Prepare for the next chunk with overlap, if there's room for it
+            if overlap_length > 0 and len(current_chunk) >= overlap_length:
+                overlap_tokens = current_chunk[-overlap_length:]
+            current_chunk = []
+            current_length = 0
+
+        current_chunk.extend(sentence)
+        current_length += len(sentence)
+
+    # Add the last chunk if not empty
+    if current_chunk:
         chunks.append(current_chunk)
-        # Calculate the start index for the next chunk based on overlap
-        start_index += max(1, len(current_chunk) - overlap_length)
-        
+
     return chunks
 
 def prepare_for_bert(chunks):
