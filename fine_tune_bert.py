@@ -26,24 +26,30 @@ from tabulate import tabulate
 from tqdm import tqdm
 from tqdm import trange
 import random
+import sys
 
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
 MAX_LEN = 510 #token size
-OVERLAP = 0.3
+
+if len(sys.argv) > 1:
+    OVERLAP = float(sys.argv[1])
+else:
+    OVERLAP = 0
+    
+print(f"training for overlap: {OVERLAP}")
 
 # Prepare for training
-#train_index = pd.read_csv("training_example_indices.txt",header=None)
-#test_indx = pd.read_csv("testing_example_indices.txt",header=None)
-label_matrix = pd.read_csv("label_matrix_merge_with_none_new.txt", sep=" ", header=None)
+# filename is the label matrix
+label_matrix = pd.read_csv("filename.txt", sep=" ", header=None)
 file_path = "removed_meta2_reduced.json"
 with open(file_path, 'r') as file:
     data = json.load(file)
 
 text = []
 for files in data:
-    print("processing ", files)
+    #print("processing ", files)
     paragraphs = ' '.join(data[files]['Client_Text_Replaced_Two'])
     text.append(paragraphs)
     
