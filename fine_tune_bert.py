@@ -184,7 +184,6 @@ def prepare_data(df_text, label):
     df_label = torch.tensor(label_array)
     
     bs = int(args.batch_size)
-    print(f"batch size is {bs}")
     train_data = TensorDataset(input_ids, attention_masks, df_label)
     train_sampler = RandomSampler(train_data)
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=bs)
@@ -248,7 +247,6 @@ def load_and_prepare(save_path):
     
     
     bs = int(args.batch_size)
-    print(f"batch size is {bs}")
     train_data = TensorDataset(input_ids, attention_masks, chunk_labels, document_ids)
     train_sampler = RandomSampler(train_data)
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=bs)
@@ -382,7 +380,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits.detach().cpu().numpy()
-                total_loss += eval_output.loss
+                total_loss += eval_output.loss.item()
                 label_ids = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
                 b_accuracy, b_precision, b_recall, b_specificity, f1 = b_metrics_multi(logits, label_ids)
