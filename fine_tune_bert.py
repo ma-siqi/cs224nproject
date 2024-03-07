@@ -281,8 +281,8 @@ def b_metrics_multi(preds, labels):
     b_precision = TP / (TP + FP) if (TP + FP) > 0 else 'nan'
     b_recall = TP / (TP + FN) if (TP + FN) > 0 else 'nan'
     b_specificity = TN / (TN + FP) if (TN + FP) > 0 else 'nan'
-    f_1 = 2*(b_precision * b_recall)/(b_precision + b_recall)
-    return b_accuracy, b_precision, b_recall, b_specificity, f_1
+    #f_1 = 2*(b_precision * b_recall)/(b_precision + b_recall)
+    return b_accuracy, b_precision, b_recall, b_specificity
 
 def majority_vote(all_predictions, all_document_ids, all_label_ids):
     grouped_predictions = defaultdict(list)
@@ -384,7 +384,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 #total_loss += eval_output.loss.item()
                 #label_ids = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
-                b_accuracy, b_precision, b_recall, b_specificity, f1 = b_metrics_multi(logits, b_labels)
+                b_accuracy, b_precision, b_recall, b_specificity= b_metrics_multi(logits, b_labels)
                 val_accuracy.append(b_accuracy)
                 # Update precision only when (tp + fp) !=0; ignore nan
                 if b_precision != 'nan': val_precision.append(b_precision)
@@ -392,7 +392,6 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 if b_recall != 'nan': val_recall.append(b_recall)
                 # Update specificity only when (tn + fp) !=0; ignore nan
                 if b_specificity != 'nan': val_specificity.append(b_specificity)
-                if f1 != 'nan': val_f1.append(f1)
         else:
             all_predictions = []
             all_label_ids = []
@@ -425,13 +424,11 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 if b_recall != 'nan': val_recall.append(b_recall)
                 # Update specificity only when (tn + fp) !=0; ignore nan
                 if b_specificity != 'nan': val_specificity.append(b_specificity)
-                if f1 != 'nan': val_f1.append(f1)
         
         print('\t - Validation Accuracy: {:.4f}'.format(sum(val_accuracy)/len(val_accuracy)))
         print('\t - Validation Precision: {:.4f}'.format(sum(val_precision)/len(val_precision)) if len(val_precision)>0 else '\t - Validation Precision: NaN')
         print('\t - Validation Recall: {:.4f}'.format(sum(val_recall)/len(val_recall)) if len(val_recall)>0 else '\t - Validation Recall: NaN')
         print('\t - Validation Specificity: {:.4f}\n'.format(sum(val_specificity)/len(val_specificity)) if len(val_specificity)>0 else '\t - Validation Specificity: NaN')
-        print('\t - Validation F1: {:.4f}\n'.format(sum(val_f1)/len(val_f1)) if len(val_f1)>0 else '\t - Validation Specificity: NaN')
 
 label_matrix = pd.read_csv(args.label_path, sep=" ", header=None)
 df_train = load_data(args.train_data_path)
