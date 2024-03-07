@@ -264,6 +264,9 @@ def b_metrics_multi(preds, labels):
     probabilities = torch.sigmoid(preds)
     predictions = (probabilities > 0.5).int()
     
+    predictions = predictions.int()
+    labels = labels.int()
+    
     TPi = (predictions & labels).sum(dim=0)    
     FPi = (predictions & ~labels).sum(dim=0)
     TNi = (~predictions & ~labels).sum(dim=0)
