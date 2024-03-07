@@ -315,7 +315,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
     
     optimizer = torch.optim.AdamW(model.parameters(), lr = learning, eps = 1e-08)
     total_steps = len(train_dataloader) * args.epochs
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps, eta_min=1e-8)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps/10, eta_min=1e-10)
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -350,7 +350,8 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
     
             optimizer.step()  # Update weights
             writer.add_scalar('Training loss', loss, epoch * len(train_dataloader) + step)
-        scheduler.step()  # Update learning rate schedule
+
+            scheduler.step()  # Update learning rate schedule
     
         # Calculate the average loss over the training data
         avg_train_loss = total_loss / len(train_dataloader)
