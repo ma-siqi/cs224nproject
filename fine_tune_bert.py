@@ -350,7 +350,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
         # Calculate the average loss over the training data
         avg_train_loss = total_loss / len(train_dataloader)
         print(f"Average training loss: {avg_train_loss:.4f}")
-        model.save_pretrained(f"bert_model_{epoch}_{args.overlap}")
+        model.save_pretrained(f"bert_model_{epoch}_{args.overlap}_{args.mode}_{args.type}_{learning}")
         # ========== Validation ==========
     
         # Set model to evaluation mode
