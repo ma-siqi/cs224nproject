@@ -49,7 +49,7 @@ argp.add_argument("--train_data_path", default="removed_meta2_reduced.json")
 argp.add_argument("--token_path", default="token")
 argp.add_argument("--test_data_path", default="removed_meta2_reduced_test.json")
 argp.add_argument("--lr_path", default="learning_rate.txt")
-argp.add_argument("--epochs", default=2)
+argp.add_argument("--epochs", default=10)
 argp.add_argument("--batch_size", default=16)
 argp.add_argument("--learning_rate", default=5e-5)
 
@@ -331,10 +331,6 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
             else:
                 b_input_ids, b_input_mask, b_labels,_ = batch
                 b_labels = b_labels.to(torch.float)
-            print("Input shape:", b_input_ids.shape)
-            print("Target shape:", b_labels.shape)
-            print("Input dtype:", b_input_ids.dtype)
-            print("Target dtype:", b_labels.dtype)
     
             model.zero_grad()  # Clear previously calculated gradients
     
