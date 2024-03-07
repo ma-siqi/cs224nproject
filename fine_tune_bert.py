@@ -376,7 +376,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits.detach().cpu().numpy()
-                total_loss += eval_output.loss.item()
+                #total_loss += eval_output.loss.item()
                 label_ids = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
                 b_accuracy, b_precision, b_recall, b_specificity, f1 = b_metrics_multi(logits, label_ids)
@@ -421,7 +421,6 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 if b_specificity != 'nan': val_specificity.append(b_specificity)
                 if f1 != 'nan': val_f1.append(f1)
         
-        print('\t - Validation loss: {:.4f}'.format(total_loss/len(validation_dataloader)))
         print('\t - Validation Accuracy: {:.4f}'.format(sum(val_accuracy)/len(val_accuracy)))
         print('\t - Validation Precision: {:.4f}'.format(sum(val_precision)/len(val_precision)) if len(val_precision)>0 else '\t - Validation Precision: NaN')
         print('\t - Validation Recall: {:.4f}'.format(sum(val_recall)/len(val_recall)) if len(val_recall)>0 else '\t - Validation Recall: NaN')
