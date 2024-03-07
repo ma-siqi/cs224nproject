@@ -375,11 +375,13 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                   eval_output = model(b_input_ids, 
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
-                logits = eval_output.logits.detach().cpu().numpy()
+                  
+                #logits = eval_output.logits.detach().cpu().numpy()
+                logits = eval_output.logits
                 #total_loss += eval_output.loss.item()
-                label_ids = b_labels.to('cpu').numpy()
+                #label_ids = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
-                b_accuracy, b_precision, b_recall, b_specificity, f1 = b_metrics_multi(logits, label_ids)
+                b_accuracy, b_precision, b_recall, b_specificity, f1 = b_metrics_multi(logits, b_labels)
                 val_accuracy.append(b_accuracy)
                 # Update precision only when (tp + fp) !=0; ignore nan
                 if b_precision != 'nan': val_precision.append(b_precision)
@@ -401,9 +403,10 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                   eval_output = model(b_input_ids, 
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
-                logits = eval_output.logits.detach().cpu().numpy()
+                logits = eval_output.logits
                 label_ids = b_labels.to('cpu').numpy()
                 
+                #TODO: FIX THIS CALCULATION
                 all_predictions.extend(logits)
                 all_label_ids.extend(label_ids)
                 all_document_ids.extend(b_document_ids.to('cpu').numpy())
@@ -411,7 +414,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 final_pred, final_label = majority_vote(all_predictions, all_document_ids, all_label_ids)
                 
                 # Calculate validation metrics
-                b_accuracy, b_precision, b_recall, b_specificity = b_metrics_multi(logits, label_ids)
+                b_accuracy, b_precision, b_recall, b_specificity = b_metrics_multi(logits, b_labels)
                 val_accuracy.append(b_accuracy)
                 # Update precision only when (tp + fp) !=0; ignore nan
                 if b_precision != 'nan': val_precision.append(b_precision)
