@@ -349,7 +349,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
     )
     
     optimizer = torch.optim.AdamW(model.parameters(), lr = learning, eps = 1e-08)
-    total_steps = len(train_dataloader) * args.epochs
+    total_steps = len(train_dataloader) * int(args.epochs)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps/10, eta_min=1e-10)
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
