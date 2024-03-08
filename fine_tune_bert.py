@@ -503,7 +503,7 @@ elif args.mode == "train":
         test_dataloader = prepare_data(df_test, label_matrix_test)
         torch.cuda.empty_cache()
         lr = float(args.learning_rate)
-        train_multi_class(train_dataloader, test_dataloader, args.type, learning=)
+        train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
     else:
         train_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_train.pth')
         test_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_test.pth')
