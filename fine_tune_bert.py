@@ -9,8 +9,7 @@ Created on Wed Jan 31 11:15:29 2024
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 from transformers import BertTokenizer, BertForSequenceClassification
-from transformers import get_linear_schedule_with_warmup
-from sklearn.model_selection import train_test_split
+#from transformers import get_linear_schedule_with_warmup
 import torch.nn as nn
 
 import pandas as pd
@@ -18,6 +17,8 @@ import numpy as np
 import json
 from collections import defaultdict
 from scipy.stats import mode
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from scipy.special import expit as sigmoid  # Sigmoid function
 
 import nltk
 nltk.download('punkt')
@@ -284,7 +285,34 @@ def b_metrics_multi(preds, labels):
     #f_1 = 2*(b_precision * b_recall)/(b_precision + b_recall)
     return b_accuracy, b_precision, b_recall, b_specificity
 
-def majority_vote(all_predictions, all_document_ids, all_label_ids):
+def b_metrics_sk(logits, labels):    
+    probabilities = sigmoid(logits)
+    
+    # Convert probabilities to binary predictions based on a threshold of 0.5
+    predictions = (probabilities > 0.5).astype(int)
+    
+    # Calculate metrics
+    accuracy = accuracy_score(labels, predictions)
+    # Calculate F1-scores with different averaging methods
+    f1_micro = f1_score(labels, predictions, average='micro')
+    f1_macro = f1_score(labels, predictions, average='macro')
+    f1_samples = f1_score(labels, predictions, average='samples')
+    
+    # Calculate AUROC with different averaging methods
+    auroc_micro = roc_auc_score(labels, probabilities, average='micro')
+    auroc_macro = roc_auc_score(labels, probabilities, average='macro')
+
+    return {
+        'accuracy': accuracy,
+        'f1_micro': f1_micro,
+        'f1_macro': f1_macro,
+        'f1_samples': f1_samples,
+        'auroc_micro': auroc_micro,
+        'auroc_macro': auroc_macro,
+    }
+
+def majority_vote(logits, all_document_ids, all_label_ids):
+    all_predictions = (sigmoid(logits) > 0.5).astype(int)
     grouped_predictions = defaultdict(list)
     document_labels = {}
     
@@ -361,37 +389,39 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
     
         # Tracking variables 
         val_accuracy = []
-        val_precision = []
-        val_recall = []
-        val_specificity = []
-        val_f1 = []
+        val_f1_micro = []
+        val_f1_macro = []
+        val_f1_samples = []
+        val_auroc_micro = []
+        val_auroc_macro = []
+        
+        total_loss = 0
         
         if group == "truncation":
-        
-            total_loss = 0
         
             for batch in validation_dataloader:
                 batch = tuple(t.to(device) for t in batch)
                 b_input_ids, b_input_mask, b_labels = batch
                 with torch.no_grad():
                   # Forward pass
-                  eval_output = model(b_input_ids, 
+                    eval_output = model(b_input_ids, 
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                   
                 #logits = eval_output.logits.detach().cpu().numpy()
                 logits = eval_output.logits
-                #total_loss += eval_output.loss.item()
+                loss = loss_fn(logits, b_labels)
+                total_loss += loss
                 #label_ids = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
-                b_accuracy, b_precision, b_recall, b_specificity= b_metrics_multi(logits, b_labels)
-                val_accuracy.append(b_accuracy)
-                # Update precision only when (tp + fp) !=0; ignore nan
-                if b_precision != 'nan': val_precision.append(b_precision)
-                # Update recall only when (tp + fn) !=0; ignore nan
-                if b_recall != 'nan': val_recall.append(b_recall)
-                # Update specificity only when (tn + fp) !=0; ignore nan
-                if b_specificity != 'nan': val_specificity.append(b_specificity)
+                metrics = b_metrics_sk(logits, b_labels)
+                val_accuracy.append(metrics["accuracy"])
+                val_f1_micro.append(metrics["f1_micro"])
+                val_f1_macro.append(metrics["f1_macro"])
+                val_f1_samples.append(metrics["f1_samples"])
+                val_auroc_micro.append(metrics["auroc_micro"])
+                val_auroc_macro.append(metrics["auroc_macro"])
+                
         else:
             all_predictions = []
             all_label_ids = []
@@ -402,11 +432,13 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 b_input_ids, b_input_mask, b_labels, b_document_ids = batch
                 with torch.no_grad():
                   # Forward pass
-                  eval_output = model(b_input_ids, 
+                    eval_output = model(b_input_ids, 
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits
                 label_ids = b_labels.to('cpu').numpy()
+                loss = loss_fn(logits, b_labels)
+                total_loss += loss
                 
                 #TODO: FIX THIS CALCULATION
                 all_predictions.extend(logits)
@@ -416,19 +448,20 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 final_pred, final_label = majority_vote(all_predictions, all_document_ids, all_label_ids)
                 
                 # Calculate validation metrics
-                b_accuracy, b_precision, b_recall, b_specificity = b_metrics_multi(logits, b_labels)
-                val_accuracy.append(b_accuracy)
-                # Update precision only when (tp + fp) !=0; ignore nan
-                if b_precision != 'nan': val_precision.append(b_precision)
-                # Update recall only when (tp + fn) !=0; ignore nan
-                if b_recall != 'nan': val_recall.append(b_recall)
-                # Update specificity only when (tn + fp) !=0; ignore nan
-                if b_specificity != 'nan': val_specificity.append(b_specificity)
+                metrics = b_metrics_sk(logits, b_labels)
+                val_accuracy.append(metrics["accuracy"])
+                val_f1_micro.append(metrics["f1_micro"])
+                val_f1_macro.append(metrics["f1_macro"])
+                val_f1_samples.append(metrics["f1_samples"])
+                val_auroc_micro.append(metrics["auroc_micro"])
+                val_auroc_macro.append(metrics["auroc_macro"])
         
         print('\t - Validation Accuracy: {:.4f}'.format(sum(val_accuracy)/len(val_accuracy)))
-        print('\t - Validation Precision: {:.4f}'.format(sum(val_precision)/len(val_precision)) if len(val_precision)>0 else '\t - Validation Precision: NaN')
-        print('\t - Validation Recall: {:.4f}'.format(sum(val_recall)/len(val_recall)) if len(val_recall)>0 else '\t - Validation Recall: NaN')
-        print('\t - Validation Specificity: {:.4f}\n'.format(sum(val_specificity)/len(val_specificity)) if len(val_specificity)>0 else '\t - Validation Specificity: NaN')
+        print('\t - Validation Accuracy: {:.4f}'.format(sum(val_f1_micro)/len(val_f1_micro)))
+        print('\t - Validation Accuracy: {:.4f}'.format(sum(val_f1_macro)/len(val_f1_macro)))
+        print('\t - Validation Accuracy: {:.4f}'.format(sum(val_f1_samples)/len(val_f1_samples)))
+        print('\t - Validation Accuracy: {:.4f}'.format(sum(val_auroc_micro)/len(val_auroc_micro)))
+        print('\t - Validation Accuracy: {:.4f}'.format(sum(val_auroc_macro)/len(val_auroc_macro)))
 
 label_matrix = pd.read_csv(args.label_path, sep=" ", header=None)
 df_train = load_data(args.train_data_path)
