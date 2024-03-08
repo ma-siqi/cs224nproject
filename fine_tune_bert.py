@@ -8,6 +8,7 @@ Created on Wed Jan 31 11:15:29 2024
 ####################LOAD PACKAGES##############################################
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
+from torch.nn.functional import sigmoid
 from transformers import BertTokenizer, BertForSequenceClassification
 #from transformers import get_linear_schedule_with_warmup
 import torch.nn as nn
@@ -17,8 +18,7 @@ import numpy as np
 import json
 from collections import defaultdict
 from scipy.stats import mode
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-from scipy.special import expit as sigmoid  # Sigmoid function
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 import nltk
 nltk.download('punkt')
@@ -285,8 +285,9 @@ def b_metrics_multi(preds, labels):
     #f_1 = 2*(b_precision * b_recall)/(b_precision + b_recall)
     return b_accuracy, b_precision, b_recall, b_specificity
 
-def b_metrics_sk(logits, labels):    
-    probabilities = sigmoid(logits)
+def b_metrics_sk(logits, labels):
+            
+    probabilities = sigmoid(logits.cpu()).numpy()
     
     # Convert probabilities to binary predictions based on a threshold of 0.5
     predictions = (probabilities > 0.5).astype(int)
