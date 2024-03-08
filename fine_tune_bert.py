@@ -387,7 +387,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
         # Calculate the average loss over the training data
         avg_train_loss = total_loss / len(train_dataloader)
         print(f"Average training loss: {avg_train_loss:.4f}")
-        model.save_pretrained(f"bert_model_{epoch}_{args.overlap}_{args.mode}_{args.type}_{learning}")
+        
         # ========== Validation ==========
     
         # Set model to evaluation mode
@@ -469,6 +469,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
         print('\t - Validation f1 samples: {:.4f}'.format(sum(val_f1_samples)/len(val_f1_samples)))
         print('\t - Validation auroc micro: {:.4f}'.format(sum(val_auroc_micro)/len(val_auroc_micro)))
         print('\t - Validation auroc macro: {:.4f}'.format(sum(val_auroc_macro)/len(val_auroc_macro)))
+        model.save_pretrained(f"bert_model_{args.overlap}_{args.mode}_{args.type}_{learning}")
 
 label_matrix = pd.read_csv(args.label_path, sep=" ", header=None)
 df_train = load_data(args.train_data_path)
@@ -501,7 +502,8 @@ elif args.mode == "train":
         label_matrix_test = pd.read_csv(args.test_label_path, sep=" ", header=None)
         test_dataloader = prepare_data(df_test, label_matrix_test)
         torch.cuda.empty_cache()
-        train_multi_class(train_dataloader, test_dataloader, args.type, learning=args.learning_rate)
+        lr = float(args.learning_rate)
+        train_multi_class(train_dataloader, test_dataloader, args.type, learning=)
     else:
         train_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_train.pth')
         test_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_test.pth')
