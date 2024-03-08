@@ -295,13 +295,17 @@ def b_metrics_sk(logits, labels):
     # Calculate metrics
     accuracy = accuracy_score(labels, predictions)
     # Calculate F1-scores with different averaging methods
-    f1_micro = f1_score(labels, predictions, average='micro')
-    f1_macro = f1_score(labels, predictions, average='macro')
-    f1_samples = f1_score(labels, predictions, average='samples')
+    f1_micro = f1_score(labels, predictions, average='micro', zero_division=0)
+    f1_macro = f1_score(labels, predictions, average='macro', zero_division=0)
+    f1_samples = f1_score(labels, predictions, average='samples', zero_division=0)
     
     # Calculate AUROC with different averaging methods
-    auroc_micro = roc_auc_score(labels, probabilities, average='micro')
-    auroc_macro = roc_auc_score(labels, probabilities, average='macro')
+    try:
+        auroc_micro = roc_auc_score(labels, probabilities, average='micro')
+        auroc_macro = roc_auc_score(labels, probabilities, average='macro')
+    except:
+        auroc_micro = 0
+        auroc_macro = 0
 
     return {
         'accuracy': accuracy,
