@@ -448,7 +448,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 
                 #TODO: FIX THIS CALCULATION
                 all_predictions.extend(logits)
-                all_label_ids.extend(label_ids)
+                all_label_ids.extend(labels)
                 all_document_ids.extend(b_document_ids.to('cpu').numpy())
                 
                 final_pred, final_label = majority_vote(all_predictions, all_document_ids, all_label_ids)
@@ -462,7 +462,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 val_auroc_micro.append(metrics["auroc_micro"])
                 val_auroc_macro.append(metrics["auroc_macro"])
         
-        print('\t - Validation loss: {:.4f}'.format(total_loss))
+        print('\t - Validation loss: {:.4f}'.format(total_loss/len(validation_dataloader)))
         print('\t - Validation accuracy: {:.4f}'.format(sum(val_accuracy)/len(val_accuracy)))
         print('\t - Validation f1 micro: {:.4f}'.format(sum(val_f1_micro)/len(val_f1_micro)))
         print('\t - Validation f1 macro: {:.4f}'.format(sum(val_f1_macro)/len(val_f1_macro)))
