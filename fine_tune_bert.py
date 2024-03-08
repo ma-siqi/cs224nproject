@@ -313,7 +313,8 @@ def b_metrics_sk(logits, labels):
     }
 
 def majority_vote(logits, all_document_ids, all_label_ids):
-    all_predictions = (sigmoid(logits) > 0.5).astype(int)
+    probabilities = sigmoid(logits.cpu()).numpy()    
+    all_predictions = (probabilities > 0.5).astype(int)
     grouped_predictions = defaultdict(list)
     document_labels = {}
     
@@ -413,9 +414,9 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 logits = eval_output.logits
                 loss = loss_fn(logits, b_labels)
                 total_loss += loss
-                #label_ids = b_labels.to('cpu').numpy()
+                labels = b_labels.to('cpu').numpy()
                 # Calculate validation metrics
-                metrics = b_metrics_sk(logits, b_labels)
+                metrics = b_metrics_sk(logits, labels)
                 val_accuracy.append(metrics["accuracy"])
                 val_f1_micro.append(metrics["f1_micro"])
                 val_f1_macro.append(metrics["f1_macro"])
@@ -437,7 +438,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits
-                label_ids = b_labels.to('cpu').numpy()
+                labels = b_labels.to('cpu').numpy()
                 loss = loss_fn(logits, b_labels)
                 total_loss += loss
                 
@@ -449,7 +450,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 final_pred, final_label = majority_vote(all_predictions, all_document_ids, all_label_ids)
                 
                 # Calculate validation metrics
-                metrics = b_metrics_sk(logits, b_labels)
+                metrics = b_metrics_sk(logits, labels)
                 val_accuracy.append(metrics["accuracy"])
                 val_f1_micro.append(metrics["f1_micro"])
                 val_f1_macro.append(metrics["f1_macro"])
