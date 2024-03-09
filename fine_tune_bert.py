@@ -442,7 +442,8 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits
-                loss = loss_fn(logits, b_labels)
+                label_float = b_labels.float()
+                loss = loss_fn(logits, label_float)
                 total_loss += loss
                 labels = b_labels.to('cpu').numpy()
                 
