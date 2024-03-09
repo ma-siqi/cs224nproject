@@ -355,7 +355,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
-    for epoch in range(args.epochs):
+    for epoch in range(int(args.epochs)):
         model.train()  # Set the model to training mode
         total_loss = 0
     
@@ -442,9 +442,9 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                                       token_type_ids = None, 
                                       attention_mask = b_input_mask)
                 logits = eval_output.logits
-                labels = b_labels.to('cpu').numpy()
                 loss = loss_fn(logits, b_labels)
                 total_loss += loss
+                labels = b_labels.to('cpu').numpy()
                 
                 #TODO: FIX THIS CALCULATION
                 all_predictions.extend(logits)
@@ -481,8 +481,8 @@ if args.mode == "tune":
     if args.type == "divide":
         for lr in lrs_list:
             torch.cuda.empty_cache()
-            train_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_train.pth')
-            test_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_test.pth')
+            train_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_train.pth')
+            test_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_test.pth')
             train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
     else:
         for lr in lrs_list:
@@ -505,8 +505,8 @@ elif args.mode == "train":
         lr = float(args.learning_rate)
         train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
     else:
-        train_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_train.pth')
-        test_dataloader = load_and_prepare(f'{args.train_token_path}_{args.overlap}_test.pth')
+        train_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_train.pth')
+        test_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_test.pth')
         train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
         
 elif args.mode == "tokenize":
