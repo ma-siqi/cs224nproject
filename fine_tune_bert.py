@@ -429,7 +429,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 val_auroc_macro.append(metrics["auroc_macro"])
                 
         else:
-            all_predictions = []
+            all_predictions = torch.tensor([], dtype=torch.float32)
             all_label_ids = []
             all_document_ids = []
         
@@ -448,7 +448,7 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 labels = b_labels.to('cpu').numpy()
                 
                 #TODO: FIX THIS CALCULATION
-                all_predictions.extend(logits)
+                all_predictions = torch.cat((all_predictions, logits.detach().cpu()), 0)
                 all_label_ids.extend(labels)
                 all_document_ids.extend(b_document_ids.to('cpu').numpy())
                 
