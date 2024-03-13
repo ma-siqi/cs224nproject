@@ -50,7 +50,7 @@ argp.add_argument("--train_data_path", default="removed_meta2_reduced.json")
 argp.add_argument("--token_path", default="token")
 argp.add_argument("--test_data_path", default="removed_meta2_reduced_test.json")
 argp.add_argument("--lr_path", default="learning_rate.txt")
-argp.add_argument("--epochs", default=10)
+argp.add_argument("--epochs", default=15)
 argp.add_argument("--batch_size", default=16)
 argp.add_argument("--learning_rate", default=5e-5)
 
@@ -166,7 +166,6 @@ def preprocessing(input_text, tokenizer):
                         return_tensors = 'pt',
                         truncation=True
                    )
-
 
 def prepare_data(df_text, label):
 
@@ -298,22 +297,27 @@ def b_metrics_sk(logits, labels):
     f1_micro = f1_score(labels, predictions, average='micro', zero_division=0)
     f1_macro = f1_score(labels, predictions, average='macro', zero_division=0)
     f1_samples = f1_score(labels, predictions, average='samples', zero_division=0)
+    f1_weighted = f1_score(labels, predictions, average='weighted', zero_division=0)
     
     # Calculate AUROC with different averaging methods
     try:
         auroc_micro = roc_auc_score(labels, probabilities, average='micro')
         auroc_macro = roc_auc_score(labels, probabilities, average='macro')
+        auroc_weighted = roc_auc_score(labels, probabilities, average='weighted')
     except:
         auroc_micro = 0
         auroc_macro = 0
+        auroc_weighted = 0
 
     return {
         'accuracy': accuracy,
         'f1_micro': f1_micro,
         'f1_macro': f1_macro,
         'f1_samples': f1_samples,
+        'f1_weighted': f1_weighted,
         'auroc_micro': auroc_micro,
         'auroc_macro': auroc_macro,
+        'auroc_weighted': auroc_weighted,
     }
 
 def majority_vote(logits, all_document_ids, all_label_ids):
@@ -398,8 +402,10 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
         val_f1_micro = []
         val_f1_macro = []
         val_f1_samples = []
+        val_f1_weighted = []
         val_auroc_micro = []
         val_auroc_macro = []
+        val_auroc_weighted = []
         
         total_loss = 0
         
@@ -425,8 +431,10 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 val_f1_micro.append(metrics["f1_micro"])
                 val_f1_macro.append(metrics["f1_macro"])
                 val_f1_samples.append(metrics["f1_samples"])
+                val_f1_weighted.append(metrics["f1_weighted"])
                 val_auroc_micro.append(metrics["auroc_micro"])
                 val_auroc_macro.append(metrics["auroc_macro"])
+                val_auroc_weighted.append(metrics["auroc_weighted"])
                 
         else:
             all_predictions = torch.tensor([], dtype=torch.float32)
@@ -460,16 +468,20 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 val_f1_micro.append(metrics["f1_micro"])
                 val_f1_macro.append(metrics["f1_macro"])
                 val_f1_samples.append(metrics["f1_samples"])
+                val_f1_weighted.append(metrics["f1_weighted"])
                 val_auroc_micro.append(metrics["auroc_micro"])
                 val_auroc_macro.append(metrics["auroc_macro"])
+                val_auroc_weighted.append(metrics["auroc_weighted"])
         
         print('\t - Validation loss: {:.4f}'.format(total_loss/len(validation_dataloader)))
         print('\t - Validation accuracy: {:.4f}'.format(sum(val_accuracy)/len(val_accuracy)))
         print('\t - Validation f1 micro: {:.4f}'.format(sum(val_f1_micro)/len(val_f1_micro)))
         print('\t - Validation f1 macro: {:.4f}'.format(sum(val_f1_macro)/len(val_f1_macro)))
         print('\t - Validation f1 samples: {:.4f}'.format(sum(val_f1_samples)/len(val_f1_samples)))
+        print('\t - Validation f1 weighted: {:.4f}'.format(sum(val_f1_weighted)/len(val_f1_weighted)))
         print('\t - Validation auroc micro: {:.4f}'.format(sum(val_auroc_micro)/len(val_auroc_micro)))
         print('\t - Validation auroc macro: {:.4f}'.format(sum(val_auroc_macro)/len(val_auroc_macro)))
+        print('\t - Validation auroc weighted: {:.4f}'.format(sum(val_auroc_weighted)/len(val_auroc_weighted)))
         model.save_pretrained(f"bert_model_{args.overlap}_{args.mode}_{args.type}_{learning}")
 
 label_matrix = pd.read_csv(args.label_path, sep=" ", header=None)
