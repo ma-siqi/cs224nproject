@@ -518,6 +518,7 @@ elif args.mode == "train":
         lr = float(args.learning_rate)
         train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
     else:
+        lr = float(args.learning_rate)
         train_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_train.pth')
         test_dataloader = load_and_prepare(f'{args.token_path}_{args.overlap}_test.pth')
         train_multi_class(train_dataloader, test_dataloader, args.type, learning=lr)
