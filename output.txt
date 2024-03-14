@@ -1,0 +1,185 @@
+ubuntu@ip-172-31-6-62:~/cs224nproject$ python fine_tune_bert.py train divide
+[nltk_data] Downloading package punkt to /home/ubuntu/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+Training for overlap: 0
+/home/ubuntu/cs224nproject/fine_tune_bert.py:245: UserWarning: To copy construct
+ from a tensor, it is recommended to use sourceTensor.clone().detach() or source
+Tensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTen
+sor).
+  chunk_labels = torch.tensor(chunk_labels, dtype=torch.int64)
+Some weights of BertForSequenceClassification were not initialized from the mode
+l checkpoint at bert-base-uncased and are newly initialized: ['classifier.bias',
+ 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it
+for predictions and inference.
+Epoch 1: 100%|██████████████████████████████| 1451/1451 [10:56<00:00,  2.21it/s]
+Average training loss: 0.5483
+         - Validation loss: 0.5541
+         - Validation accuracy: 0.5330
+         - Validation f1 micro: 0.3696
+         - Validation f1 macro: 0.2654
+         - Validation f1 samples: 0.1601
+         - Validation f1 weighted: 0.3330
+         - Validation auroc micro: 0.7051
+         - Validation auroc macro: 0.6770
+         - Validation auroc weighted: 0.6762
+Epoch 2: 100%|██████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.4736
+         - Validation loss: 0.5616
+         - Validation accuracy: 0.5298
+         - Validation f1 micro: 0.3777
+         - Validation f1 macro: 0.2892
+         - Validation f1 samples: 0.1656
+         - Validation f1 weighted: 0.3507
+         - Validation auroc micro: 0.7095
+         - Validation auroc macro: 0.6849
+         - Validation auroc weighted: 0.6855
+Epoch 3: 100%|██████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.4706
+         - Validation loss: 0.5696
+         - Validation accuracy: 0.5260
+         - Validation f1 micro: 0.3545
+         - Validation f1 macro: 0.2900
+         - Validation f1 samples: 0.1470
+         - Validation f1 weighted: 0.3356
+         - Validation auroc micro: 0.6885
+         - Validation auroc macro: 0.6613
+         - Validation auroc weighted: 0.6656
+Epoch 4: 100%|██████████████████████████████| 1451/1451 [10:58<00:00,  2.20it/s]
+Average training loss: 0.3924
+         - Validation loss: 0.6513
+         - Validation accuracy: 0.5205
+         - Validation f1 micro: 0.4519
+         - Validation f1 macro: 0.3694
+         - Validation f1 samples: 0.2179
+         - Validation f1 weighted: 0.4270
+         - Validation auroc micro: 0.7069
+         - Validation auroc macro: 0.6792
+         - Validation auroc weighted: 0.6779
+Epoch 5: 100%|██████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.2314
+         - Validation loss: 0.8348
+         - Validation accuracy: 0.4829
+         - Validation f1 micro: 0.4718
+         - Validation f1 macro: 0.4243
+         - Validation f1 samples: 0.2471
+         - Validation f1 weighted: 0.4746
+         - Validation auroc micro: 0.6694
+         - Validation auroc macro: 0.6432
+         - Validation auroc weighted: 0.6471
+Epoch 6: 100%|██████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.2513
+         - Validation loss: 0.8214
+         - Validation accuracy: 0.4712
+         - Validation f1 micro: 0.4843
+         - Validation f1 macro: 0.4087
+         - Validation f1 samples: 0.2632
+         - Validation f1 weighted: 0.4662
+         - Validation auroc micro: 0.6872
+         - Validation auroc macro: 0.6520
+         - Validation auroc weighted: 0.6569
+Epoch 7: 100%|██████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.2063
+         - Validation loss: 0.9108
+         - Validation accuracy: 0.4900
+         - Validation f1 micro: 0.4622
+         - Validation f1 macro: 0.4000
+         - Validation f1 samples: 0.2368
+         - Validation f1 weighted: 0.4486
+         - Validation auroc micro: 0.6749
+         - Validation auroc macro: 0.6432
+         - Validation auroc weighted: 0.6473
+Epoch 8: 100%|██████████████████████████████| 1451/1451 [10:58<00:00,  2.20it/s]
+Average training loss: 0.0838
+         - Validation loss: 1.3142
+         - Validation accuracy: 0.4901
+         - Validation f1 micro: 0.4249
+         - Validation f1 macro: 0.3830
+         - Validation f1 samples: 0.2038
+         - Validation f1 weighted: 0.4224
+         - Validation auroc micro: 0.6392
+         - Validation auroc macro: 0.6284
+         - Validation auroc weighted: 0.6258
+Epoch 9: 100%|██████████████████████████████| 1451/1451 [10:58<00:00,  2.20it/s]
+Average training loss: 0.1233
+         - Validation loss: 1.0939
+         - Validation accuracy: 0.4723
+         - Validation f1 micro: 0.4350
+         - Validation f1 macro: 0.3916
+         - Validation f1 samples: 0.2177
+         - Validation f1 weighted: 0.4342
+         - Validation auroc micro: 0.6525
+         - Validation auroc macro: 0.6342
+         - Validation auroc weighted: 0.6310
+Epoch 10: 100%|█████████████████████████████| 1451/1451 [10:58<00:00,  2.20it/s]
+Average training loss: 0.1234
+         - Validation loss: 1.4266
+         - Validation accuracy: 0.4577
+         - Validation f1 micro: 0.4570
+         - Validation f1 macro: 0.4166
+         - Validation f1 samples: 0.2416
+         - Validation f1 weighted: 0.4593
+         - Validation auroc micro: 0.6590
+         - Validation auroc macro: 0.6406
+         - Validation auroc weighted: 0.6404
+Epoch 11: 100%|█████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.0435
+         - Validation loss: 1.7929
+         - Validation accuracy: 0.4819
+         - Validation f1 micro: 0.4352
+         - Validation f1 macro: 0.3790
+         - Validation f1 samples: 0.2171
+         - Validation f1 weighted: 0.4261
+         - Validation auroc micro: 0.6521
+         - Validation auroc macro: 0.6299
+         - Validation auroc weighted: 0.6302
+Epoch 12: 100%|█████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.0812
+         - Validation loss: 1.3989
+         - Validation accuracy: 0.4322
+         - Validation f1 micro: 0.4449
+         - Validation f1 macro: 0.4169
+         - Validation f1 samples: 0.2354
+         - Validation f1 weighted: 0.4544
+         - Validation auroc micro: 0.6263
+         - Validation auroc macro: 0.6341
+         - Validation auroc weighted: 0.6335
+Epoch 13: 100%|█████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.0954
+         - Validation loss: 1.7602
+         - Validation accuracy: 0.4588
+         - Validation f1 micro: 0.4421
+         - Validation f1 macro: 0.4033
+         - Validation f1 samples: 0.2308
+         - Validation f1 weighted: 0.4443
+         - Validation auroc micro: 0.6443
+         - Validation auroc macro: 0.6275
+         - Validation auroc weighted: 0.6286
+Epoch 14:  92%|██████████████████████████▋  | 1333/1451 [10:04<00:53,  2.21it/s]
+Epoch 14:  92%|██████████████████████████▋  | 1334/1451 [10:04<00:52,  2.21it/s]
+Epoch 14: 100%|█████████████████████████████| 1451/1451 [10:57<00:00,  2.21it/s]
+Average training loss: 0.0301
+         - Validation loss: 1.9517
+         - Validation accuracy: 0.4760
+         - Validation f1 micro: 0.4341
+         - Validation f1 macro: 0.3851
+         - Validation f1 samples: 0.2139
+         - Validation f1 weighted: 0.4277
+         - Validation auroc micro: 0.6507
+         - Validation auroc macro: 0.6201
+         - Validation auroc weighted: 0.6209
+Epoch 15:  58%|█████████████████▌            | 847/1451 [06:23<04:34,  2.20it/s]
+Epoch 15: 100%|█████████████████████████████| 1451/1451 [10:56<00:00,  2.21it/s]
+Average training loss: 0.0654
+         - Validation loss: 1.5992
+         - Validation accuracy: 0.4509
+         - Validation f1 micro: 0.4803
+         - Validation f1 macro: 0.4203
+         - Validation f1 samples: 0.2743
+         - Validation f1 weighted: 0.4687
+         - Validation auroc micro: 0.6674
+         - Validation auroc macro: 0.6406
+         - Validation auroc weighted: 0.6373
+ubuntu@ip-172-31-6-62:~/cs224nproject$ tmux capture-pane -p -S - -E - > output.t
+xt
+
