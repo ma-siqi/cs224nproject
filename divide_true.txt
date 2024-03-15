@@ -1,0 +1,151 @@
+Training for overlap: 0
+Average training loss: 0.5732
+	 - Validation loss: 0.5763
+	 - Validation accuracy: 0.5190
+	 - Validation f1 micro: 0.2460
+	 - Validation f1 macro: 0.1647
+	 - Validation f1 samples: 0.0961
+	 - Validation f1 weighted: 0.2206
+	 - Validation auroc micro: 0.6600
+	 - Validation auroc macro: 0.6215
+	 - Validation auroc weighted: 0.6277
+Average training loss: 0.5603
+	 - Validation loss: 0.5672
+	 - Validation accuracy: 0.5197
+	 - Validation f1 micro: 0.2684
+	 - Validation f1 macro: 0.1784
+	 - Validation f1 samples: 0.1070
+	 - Validation f1 weighted: 0.2393
+	 - Validation auroc micro: 0.6819
+	 - Validation auroc macro: 0.6440
+	 - Validation auroc weighted: 0.6459
+Average training loss: 0.5506
+	 - Validation loss: 0.5662
+	 - Validation accuracy: 0.5334
+	 - Validation f1 micro: 0.3758
+	 - Validation f1 macro: 0.2490
+	 - Validation f1 samples: 0.1683
+	 - Validation f1 weighted: 0.3261
+	 - Validation auroc micro: 0.6883
+	 - Validation auroc macro: 0.6465
+	 - Validation auroc weighted: 0.6560
+Average training loss: 0.4985
+	 - Validation loss: 0.5698
+	 - Validation accuracy: 0.5277
+	 - Validation f1 micro: 0.4315
+	 - Validation f1 macro: 0.3125
+	 - Validation f1 samples: 0.2071
+	 - Validation f1 weighted: 0.3839
+	 - Validation auroc micro: 0.7192
+	 - Validation auroc macro: 0.6861
+	 - Validation auroc weighted: 0.6888
+Average training loss: 0.4018
+	 - Validation loss: 0.6409
+	 - Validation accuracy: 0.4918
+	 - Validation f1 micro: 0.4655
+	 - Validation f1 macro: 0.4154
+	 - Validation f1 samples: 0.2371
+	 - Validation f1 weighted: 0.4609
+	 - Validation auroc micro: 0.6772
+	 - Validation auroc macro: 0.6647
+	 - Validation auroc weighted: 0.6610
+Average training loss: 0.4079
+	 - Validation loss: 0.6121
+	 - Validation accuracy: 0.4910
+	 - Validation f1 micro: 0.4193
+	 - Validation f1 macro: 0.3750
+	 - Validation f1 samples: 0.2096
+	 - Validation f1 weighted: 0.4154
+	 - Validation auroc micro: 0.6648
+	 - Validation auroc macro: 0.6592
+	 - Validation auroc weighted: 0.6563
+Average training loss: 0.3376
+	 - Validation loss: 0.7486
+	 - Validation accuracy: 0.4907
+	 - Validation f1 micro: 0.4352
+	 - Validation f1 macro: 0.3810
+	 - Validation f1 samples: 0.2123
+	 - Validation f1 weighted: 0.4267
+	 - Validation auroc micro: 0.6491
+	 - Validation auroc macro: 0.6327
+	 - Validation auroc weighted: 0.6335
+Average training loss: 0.2062
+	 - Validation loss: 0.9504
+	 - Validation accuracy: 0.4629
+	 - Validation f1 micro: 0.4319
+	 - Validation f1 macro: 0.3956
+	 - Validation f1 samples: 0.2194
+	 - Validation f1 weighted: 0.4342
+	 - Validation auroc micro: 0.6210
+	 - Validation auroc macro: 0.6179
+	 - Validation auroc weighted: 0.6180
+Average training loss: 0.2305
+	 - Validation loss: 0.8298
+	 - Validation accuracy: 0.4548
+	 - Validation f1 micro: 0.4331
+	 - Validation f1 macro: 0.4070
+	 - Validation f1 samples: 0.2209
+	 - Validation f1 weighted: 0.4393
+	 - Validation auroc micro: 0.6434
+	 - Validation auroc macro: 0.6256
+	 - Validation auroc weighted: 0.6271
+Average training loss: 0.2031
+	 - Validation loss: 1.0222
+	 - Validation accuracy: 0.4634
+	 - Validation f1 micro: 0.4307
+	 - Validation f1 macro: 0.3879
+	 - Validation f1 samples: 0.2222
+	 - Validation f1 weighted: 0.4293
+	 - Validation auroc micro: 0.6406
+	 - Validation auroc macro: 0.6210
+	 - Validation auroc weighted: 0.6216
+Average training loss: 0.1051
+	 - Validation loss: 1.3806
+	 - Validation accuracy: 0.4594
+	 - Validation f1 micro: 0.4225
+	 - Validation f1 macro: 0.3855
+	 - Validation f1 samples: 0.2131
+	 - Validation f1 weighted: 0.4241
+	 - Validation auroc micro: 0.6211
+	 - Validation auroc macro: 0.6087
+	 - Validation auroc weighted: 0.6120
+Average training loss: 0.1347
+	 - Validation loss: 1.2783
+	 - Validation accuracy: 0.4398
+	 - Validation f1 micro: 0.4640
+	 - Validation f1 macro: 0.3978
+	 - Validation f1 samples: 0.2568
+	 - Validation f1 weighted: 0.4561
+	 - Validation auroc micro: 0.6323
+	 - Validation auroc macro: 0.6012
+	 - Validation auroc weighted: 0.6084
+Average training loss: 0.1345
+	 - Validation loss: 1.3927
+	 - Validation accuracy: 0.4643
+	 - Validation f1 micro: 0.4442
+	 - Validation f1 macro: 0.3942
+	 - Validation f1 samples: 0.2282
+	 - Validation f1 weighted: 0.4412
+	 - Validation auroc micro: 0.6367
+	 - Validation auroc macro: 0.6208
+	 - Validation auroc weighted: 0.6180
+Average training loss: 0.0627
+	 - Validation loss: 1.6198
+	 - Validation accuracy: 0.4659
+	 - Validation f1 micro: 0.4442
+	 - Validation f1 macro: 0.3960
+	 - Validation f1 samples: 0.2298
+	 - Validation f1 weighted: 0.4391
+	 - Validation auroc micro: 0.6386
+	 - Validation auroc macro: 0.6163
+	 - Validation auroc weighted: 0.6166
+Average training loss: 0.0935
+	 - Validation loss: 1.2257
+	 - Validation accuracy: 0.4627
+	 - Validation f1 micro: 0.4451
+	 - Validation f1 macro: 0.4027
+	 - Validation f1 samples: 0.2310
+	 - Validation f1 weighted: 0.4420
+	 - Validation auroc micro: 0.6601
+	 - Validation auroc macro: 0.6289
+	 - Validation auroc weighted: 0.6249
