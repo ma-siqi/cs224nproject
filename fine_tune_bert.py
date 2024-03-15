@@ -167,6 +167,25 @@ def preprocessing(input_text, tokenizer):
                         truncation=True
                    )
 
+def preprocess_random(input_text, tokenizer):
+  '''
+  Returns <class transformers.tokenization_utils_base.BatchEncoding> with the following fields:
+    - input_ids: list of token ids
+    - token_type_ids: list of token type ids
+    - attention_mask: list of indices (0,1) specifying which tokens should considered by the model (return_attention_mask = True).
+  '''
+  start_idx = random.randint(0, max(0, len(input_text) - 510))
+  new_text = input_text[start_idx: ]
+  return tokenizer.encode_plus(
+                        new_text,
+                        add_special_tokens = True,
+                        max_length = 512,
+                        padding='max_length',
+                        return_attention_mask = True,
+                        return_tensors = 'pt',
+                        truncation=True
+                   )
+
 def prepare_data(df_text, label):
 
     input_ids = []
@@ -320,6 +339,28 @@ def b_metrics_sk(logits, labels):
         'auroc_weighted': auroc_weighted,
     }
 
+def any_true(logits, all_document_ids, all_label_ids):
+    # Assuming sigmoid function is defined elsewhere or using from scipy
+    probabilities = sigmoid(logits.cpu()).numpy()    
+    all_predictions = (probabilities > 0.5).astype(int)
+    grouped_predictions = defaultdict(list)
+    document_labels = {}
+    
+    for prediction, doc_id, label in zip(all_predictions, all_document_ids, all_label_ids):
+        grouped_predictions[doc_id].append(prediction)
+        document_labels[doc_id] = label
+    
+    # Aggregate predictions by checking if any prediction is True within each group
+    final_predictions = []
+    final_labels = []
+    for doc_id, preds in grouped_predictions.items():
+        # Use numpy.any to check if any prediction is True (1) within the group
+        any_true_pred = np.any(preds).astype(int)
+        final_predictions.append(any_true_pred)
+        final_labels.append(document_labels[doc_id])
+    
+    return np.array(final_predictions), np.array(final_labels)
+
 def majority_vote(logits, all_document_ids, all_label_ids):
     probabilities = sigmoid(logits.cpu()).numpy()    
     all_predictions = (probabilities > 0.5).astype(int)
@@ -460,7 +501,8 @@ def train_multi_class(train_dataloader, validation_dataloader, group, num_class=
                 all_label_ids.extend(labels)
                 all_document_ids.extend(b_document_ids.to('cpu').numpy())
                 
-                final_pred, final_label = majority_vote(all_predictions, all_document_ids, all_label_ids)
+                # Majority vote or true
+                final_pred, final_label = any_true(all_predictions, all_document_ids, all_label_ids)
                 
                 # Calculate validation metrics
                 metrics = b_metrics_sk(logits, labels)
