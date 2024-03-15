@@ -193,7 +193,8 @@ def prepare_data(df_text, label):
     label_array = label.values[:, [1,2]]
     
     for sample in df_text[0]:
-        encoding_dict = preprocessing(sample, tokenizer)
+        # test random
+        encoding_dict = preprocess_random(sample, tokenizer)
         input_ids.append(encoding_dict['input_ids']) 
         attention_masks.append(encoding_dict['attention_mask'])
 
